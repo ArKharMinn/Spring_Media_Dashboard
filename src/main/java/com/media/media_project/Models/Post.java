@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +27,8 @@ public class Post {
     @JoinColumn(name = "category_id")
     private Category category_id;
 
-    public Category getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(Category category_id) {
-        this.category_id = category_id;
-    }
-
     @NotEmpty(message = "Image URL cannot be empty")
-    private String imageUrl;
+    private String image_url;
 
     public Long getId() {
         return id;
@@ -61,11 +54,20 @@ public class Post {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Category getCategory_id() {
+        return category_id;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCategory_id(Category category_id) {
+        this.category_id = category_id;
     }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
 }

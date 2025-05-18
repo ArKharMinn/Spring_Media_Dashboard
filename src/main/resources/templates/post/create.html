@@ -24,15 +24,13 @@
             class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
           >
             <div>
-              <h1 class="text-2xl font-bold text-gray-800">
-                Create New Category
-              </h1>
+              <h1 class="text-2xl font-bold text-gray-800">Create New Post</h1>
               <p class="text-gray-600 mt-1">
-                Add a new category to your system
+                Fill in the details below to create a new blog post
               </p>
             </div>
             <a
-              href="/category/list"
+              href="/post/list"
               class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
             >
               <i class="fas fa-arrow-left mr-2"></i> Back to List
@@ -44,22 +42,47 @@
             class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200"
           >
             <form
-              th:action="@{/upload}"
+              th:action="@{/post/upload}"
               enctype="multipart/form-data"
               method="post"
               class="space-y-6 p-6"
             >
+              <!-- Featured Image Upload -->
               <div>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                  <input type="file" name="image_url" id="" />
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Featured Image
+                </label>
+                <div
+                  class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                >
+                  <div class="space-y-1 text-center">
+                    <div class="flex text-sm text-gray-600">
+                      <label
+                        for="file-upload"
+                        class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                      >
+                        <span>Upload a file</span>
+                        <input
+                          id="file-upload"
+                          name="imageFile"
+                          type="file"
+                          class="sr-only"
+                        />
+                      </label>
+                      <p class="pl-1">or drag and drop</p>
+                    </div>
+                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                  </div>
                 </div>
               </div>
+
+              <!-- Post Title -->
               <div>
                 <label
                   for="name"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Post Name <span class="text-red-500">*</span>
+                  Post Title <span class="text-red-500">*</span>
                 </label>
                 <div class="mt-1 relative rounded-md shadow-sm">
                   <input
@@ -67,22 +90,30 @@
                     id="name"
                     name="name"
                     class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
+                    placeholder="Enter post title"
                     required
-                    aria-describedby="name-description"
                   />
                 </div>
               </div>
 
+              <!-- Category Selection -->
               <div>
                 <label
-                  for="name"
+                  for="category"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Post Name <span class="text-red-500">*</span>
+                  Category <span class="text-red-500">*</span>
                 </label>
                 <div class="mt-1 relative rounded-md shadow-sm">
-                  <select name="category_id" required>
-                    <option value="" selected disabled>Select Category</option>
+                  <select
+                    id="category"
+                    name="category_id"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
+                    required
+                  >
+                    <option value="" selected disabled>
+                      Select a category
+                    </option>
                     <option
                       th:each="category : ${category}"
                       th:value="${category.id}"
@@ -92,22 +123,22 @@
                 </div>
               </div>
 
+              <!-- Post Content -->
               <div>
                 <label
                   for="description"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Post Description <span class="text-red-500">*</span>
+                  Post Content <span class="text-red-500">*</span>
                 </label>
                 <div class="mt-1 relative rounded-md shadow-sm">
                   <textarea
-                    type="text"
                     id="description"
                     name="description"
-                    rows="4"
+                    rows="6"
                     class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
+                    placeholder="Write your post content here..."
                     required
-                    aria-describedby="name-description"
                   ></textarea>
                 </div>
               </div>
@@ -117,16 +148,16 @@
                 class="flex justify-end space-x-3 pt-4 border-t border-gray-200"
               >
                 <a
-                  href="/category/list"
+                  href="/post/list"
                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Cancel
                 </a>
                 <button
                   type="submit"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
-                  <i class="fas fa-save mr-2"></i> Create Category
+                  <i class="fas fa-save mr-2"></i> Publish Post
                 </button>
               </div>
             </form>

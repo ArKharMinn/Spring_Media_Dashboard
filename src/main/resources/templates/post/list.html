@@ -64,6 +64,12 @@
                     </th>
                     <th
                       scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Category
+                    </th>
+                    <th
+                      scope="col"
                       class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Actions
@@ -85,14 +91,20 @@
                     ></td>
                     <td
                       class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                      th:text="${post.description}"
+                      th:text="${#strings.substring(post.description, 0, 20)}"
                     ></td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                      th:text="${post.category.name}"
+                    ></td>
+
                     <td
                       class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
                     >
                       <div class="flex justify-end space-x-2">
                         <!-- Edit Button -->
                         <a
+                          th:href="@{/post/edit/{id}(id=${post.id})}"
                           class="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50 transition-colors"
                           title="Edit"
                         >
@@ -101,6 +113,7 @@
 
                         <!-- Delete Button -->
                         <a
+                          th:href="@{/post/delete/{id}(id=${post.id})}"
                           class="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors"
                           title="Delete"
                         >

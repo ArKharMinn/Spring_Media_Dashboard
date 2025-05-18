@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/post")
@@ -67,7 +66,7 @@ public class PostController {
         Post existingPost = postRepo.findById(id).orElse(null);
         if (existingPost != null) {
             existingPost.setName(post.getName());
-            existingPost.setCategory_id(post.getCategory_id());
+            existingPost.setCategory(post.getCategory());
             existingPost.setDescription(post.getDescription());
         }
         return "redirect:/post/list";
@@ -80,11 +79,10 @@ public class PostController {
                 String originalFileName = image.getOriginalFilename();
                 String fileName = System.currentTimeMillis() + "_" + originalFileName;
 
-                String uploadDir = "uploads/";
-
+                String uploadDir = "src/main/resources/static/uploads/";
                 Files.createDirectories(Paths.get(uploadDir));
 
-                Path filePath = Paths.get(uploadDir + fileName);
+                Path filePath = Paths.get(uploadDir, fileName);
 
                 Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 

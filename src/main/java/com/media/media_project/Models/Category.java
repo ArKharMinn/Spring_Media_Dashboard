@@ -18,7 +18,7 @@ public class Category {
     @NotEmpty(message = "Category name cannot be empty")
     private String name;
 
-    @OneToMany(mappedBy = "category_id")
+    @OneToMany(mappedBy = "category")
     private List<Post> posts;
 
     public Long getId() {
@@ -27,6 +27,14 @@ public class Category {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     public String getName() {

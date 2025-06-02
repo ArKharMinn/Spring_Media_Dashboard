@@ -61,41 +61,43 @@ public class PostController {
         return "redirect:/post/edit";
     }
 
-    @PostMapping("/update/{id}")
-    public String update(@ModelAttribute Post post, @PathVariable Long id) {
-        Post existingPost = postRepo.findById(id).orElse(null);
-        if (existingPost != null) {
-            existingPost.setName(post.getName());
-            existingPost.setCategory(post.getCategory());
-            existingPost.setDescription(post.getDescription());
-        }
-        return "redirect:/post/list";
-    }
-
     @PostMapping("/upload")
-    public String uploadPost(@ModelAttribute Post post, @RequestParam("imageFile") MultipartFile image) {
-        if (!image.isEmpty()) {
-            try {
+    public String uploadPost(@ModelAttribute Post post,
+            @RequestParam("imageFile") MultipartFile image) {
+        try {
+            // Just log to confirm category is bound properly
+            if (post.getCategory() == null || post.getCategory().getId() == null) {
+                throw new IllegalArgumentException("Category is missing");
+            }
+
+            // Optional: Load full Category object from DB if needed
+            Category category = categoryRepo.findById(post.getCategory().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+
+            post.setCategory(category);
+
+            // Handle image
+            if (!image.isEmpty()) {
                 String originalFileName = image.getOriginalFilename();
                 String fileName = System.currentTimeMillis() + "_" + originalFileName;
 
                 String uploadDir = "src/main/resources/static/uploads/";
                 Files.createDirectories(Paths.get(uploadDir));
-
                 Path filePath = Paths.get(uploadDir, fileName);
-
                 Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 post.setImage_url(fileName);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "redirect:/post/create?error";
+            } else {
+                post.setImage_url("default");
             }
+
+            postRepo.save(post);
+            return "redirect:/post/list";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/post/create?error";
         }
-
-        postRepo.save(post);
-
-        return "redirect:/post/list";
     }
 
 }

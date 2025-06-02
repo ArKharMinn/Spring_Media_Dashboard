@@ -91,15 +91,19 @@
                       class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                       th:text="${post.id}"
                     ></td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                    ></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <img th:src="@{/uploads/{filename}(filename=${post.image_url})}"
+                           alt="Post Image"
+                           class="h-16 w-16 object-cover rounded" />
+                    </td>
+                    
                     <td
                       class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                       th:text="${post.name}"
                     ></td>
                     <td
                       class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                      th:text="${post.description}"
                     ></td>
 
                     <td

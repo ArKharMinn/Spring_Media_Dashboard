@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.media.media_project.Models.Category;
 import com.media.media_project.Models.Post;
@@ -57,26 +58,71 @@ public class PostController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
         Post post = postRepo.findById(id).orElse(null);
+        List<Category> category = categoryRepo.findAll();
+        model.addAttribute("category", category);
+        model.addAttribute("title", "Edit posts");
         model.addAttribute("post", post);
-        return "redirect:/post/edit";
+        return "post/edit";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updatePost(@PathVariable Long id,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("category.id") Long categoryId,
+            @RequestParam(value = "image_url", required = false) MultipartFile image,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Post existingPost = postRepo.findById(id).orElse(null);
+            if (existingPost == null) {
+                redirectAttributes.addFlashAttribute("error", "Post not found.");
+                return "redirect:/post/list";
+            }
+
+            existingPost.setName(name);
+            existingPost.setDescription(description);
+
+            if (categoryId != null) {
+                Category category = categoryRepo.findById(categoryId).orElse(null);
+                if (category != null) {
+                    existingPost.setCategory(category);
+                }
+            }
+
+            if (image != null && !image.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                String uploadDir = "src/main/resources/static/uploads/";
+                Files.createDirectories(Paths.get(uploadDir));
+                Path filePath = Paths.get(uploadDir, fileName);
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                existingPost.setImage_url(fileName);
+            }
+
+            postRepo.save(existingPost);
+            redirectAttributes.addFlashAttribute("success", "Post updated successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error updating post: " + e.getMessage());
+            return "redirect:/post/edit/" + id;
+        }
+
+        return "redirect:/post/list";
     }
 
     @PostMapping("/upload")
     public String uploadPost(@ModelAttribute Post post,
             @RequestParam("imageFile") MultipartFile image) {
         try {
-            // Just log to confirm category is bound properly
             if (post.getCategory() == null || post.getCategory().getId() == null) {
                 throw new IllegalArgumentException("Category is missing");
             }
 
-            // Optional: Load full Category object from DB if needed
             Category category = categoryRepo.findById(post.getCategory().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
             post.setCategory(category);
 
-            // Handle image
             if (!image.isEmpty()) {
                 String originalFileName = image.getOriginalFilename();
                 String fileName = System.currentTimeMillis() + "_" + originalFileName;

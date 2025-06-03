@@ -92,10 +92,10 @@
                       th:text="${post.id}"
                     ></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <img th:src="@{/uploads/{filename}(filename=${post.image_url})}"
+                      <img th:src="@{'/uploads/' + ${post.image_url}}"
                            alt="Post Image"
                            class="h-16 w-16 object-cover rounded" />
-                    </td>
+                    </td>                    
                     
                     <td
                       class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"

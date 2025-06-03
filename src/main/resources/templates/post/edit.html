@@ -24,9 +24,9 @@
             class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4"
           >
             <div>
-              <h1 class="text-2xl font-bold text-gray-800">Create New Post</h1>
+              <h1 class="text-2xl font-bold text-gray-800">Update Post</h1>
               <p class="text-gray-600 mt-1">
-                Fill in the details below to create a new blog post
+                Fill in the details below to update a blog post
               </p>
             </div>
             <a
@@ -42,11 +42,12 @@
             class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200"
           >
             <form
-              th:action="@{/upload}"
               enctype="multipart/form-data"
+              th:action="@{/post/update/{id}(id=${post.id})}"
               method="post"
               class="space-y-6 p-6"
             >
+            
               <!-- Featured Image Upload -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -61,13 +62,17 @@
                         for="file-upload"
                         class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
                       >
+                      <img th:src="@{'/uploads/' + ${post.image_url}}"
+                      alt="Post Image"
+                      class="h-16 w-16 object-cover rounded" />
                         <span>Upload a file</span>
                         <input
-                          id="file-upload"
-                          name="image_url"
-                          type="file"
-                          class="sr-only"
-                        />
+                        id="file-upload"
+                        name="image_url" 
+                        type="file"
+                        class="sr-only"
+                      />
+                      
                       </label>
                       <p class="pl-1">or drag and drop</p>
                     </div>
@@ -88,7 +93,7 @@
                   <input
                     type="text"
                     id="name"
-                    th:value="post.name"
+                    th:value="${post.name}"
                     name="name"
                     class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
                     placeholder="Enter post title"
@@ -108,18 +113,16 @@
                 <div class="mt-1 relative rounded-md shadow-sm">
                   <select
                     id="category"
-                    name="category_id"
+                    name="category.id"
                     class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
                     required
                   >
-                    <option value="" selected disabled>
-                      Select a category
+                    <option th:each="cat : ${category}"
+                      th:value="${cat.id}"
+                      th:text="${cat.name}"
+                      th:selected="${cat.id} == ${post.category.id}">
                     </option>
-                    <option
-                      th:each="category : ${category}"
-                      th:value="${category.id}"
-                      th:text="${category.name}"
-                    ></option>
+          
                   </select>
                 </div>
               </div>
@@ -136,7 +139,7 @@
                   <textarea
                     id="description"
                     name="description"
-                    th:value="post.description"
+                    th:text="${post.description}"
                     rows="6"
                     class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150"
                     placeholder="Write your post content here..."
@@ -150,7 +153,7 @@
                 class="flex justify-end space-x-3 pt-4 border-t border-gray-200"
               >
                 <a
-                  href="/category/list"
+                  href="/post/list"
                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Cancel

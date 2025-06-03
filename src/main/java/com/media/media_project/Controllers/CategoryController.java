@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.media.media_project.Models.Category;
 import com.media.media_project.Repo.CategoryRepo;
+import com.media.media_project.Repo.PostRepo;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +23,12 @@ public class CategoryController {
     @Autowired
     private CategoryRepo categoryRepo;
 
+    @Autowired
+    private PostRepo postRepo;
+
     @GetMapping("/list")
     public String list(Model model) {
+
         List<Category> category = categoryRepo.findAll();
         model.addAttribute("category", category);
         model.addAttribute("title", "Category List");
@@ -29,7 +36,11 @@ public class CategoryController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        if (postRepo.countByCategory_Id(id) > 0) {
+            redirectAttributes.addFlashAttribute("error", "Cannot delete category: it is still in use");
+            return "redirect:/category/list";
+        }
         categoryRepo.deleteById(id);
         return "redirect:/category/list";
     }

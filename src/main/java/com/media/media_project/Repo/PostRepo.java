@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.media.media_project.Models.Post;
 
 public interface PostRepo extends JpaRepository<Post, Long> {
-
+    long countByCategory_Id(Long categoryId);
 }

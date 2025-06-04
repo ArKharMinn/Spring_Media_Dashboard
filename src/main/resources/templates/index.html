@@ -12,11 +12,39 @@
       <div th:replace="~{side :: side}"></div>
 
       <!-- Main content area -->
-      <div class="flex-1 overflow-auto">
-        <main class="p-6">
-          <span>Welcome </span>
-          <span th:text="${#authentication.name}"></span>
-        </main>
+      <div class="flex-1 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Welcome Card -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Welcome</h2>
+            <p class="text-gray-600">
+              Hello, <span class="font-medium text-blue-600" th:text="${#authentication.name}"></span>!
+            </p>
+          </div>
+
+          <!-- Category Card -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Categories</h2>
+            <div class="flex items-center">
+              <span class="text-gray-600 mr-2">Total Categories:</span>
+              <span class="text-lg font-bold text-blue-600" th:text="${category}"></span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Posts</h2>
+            <div class="flex items-center">
+              <span class="text-gray-600 mr-2">Total Post:</span>
+              <span class="text-lg font-bold text-blue-600" th:text="${post}"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional content can be added here -->
+        <div class="mt-6 bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Dashboard Overview</h2>
+          <p class="text-gray-600">Your dashboard content goes here...</p>
+        </div>
       </div>
     </div>
   </body>

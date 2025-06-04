@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.media.media_project.Models.Category;
 import com.media.media_project.Repo.CategoryRepo;
 import com.media.media_project.Repo.PostRepo;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -52,7 +55,8 @@ public class CategoryController {
     }
 
     @PostMapping("/create/form")
-    public String form(@ModelAttribute Category category) {
+    public String form(@ModelAttribute @Valid Category category, BindingResult bindingResult) {
+
         categoryRepo.save(category);
         return "redirect:/category/list";
     }
